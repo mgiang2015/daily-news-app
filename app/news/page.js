@@ -1,14 +1,26 @@
-import { promises as fs } from 'fs';
-export default async function News() {
-        const file = await fs.readFile(process.cwd() + '/app/news/data/test.json', 'utf8');
-        const data = JSON.parse(file);
+'use client'
+
+import { useState, useEffect } from "react";
+
+export default function News() {
+    const [data, setData] = useState({news: []});
+
+    useEffect(() => {
+        console.log("fetching news now!")
+        fetch('/api/news')
+        .then(res => res.json())
+        .then(resData => {
+            console.log(resData.data);
+            setData(resData.data);
+        })
+    }, [])
 
     return (
         <div>
             {
                 data.news.map(article => {
                     return (
-                        <div>
+                        <div key={article.Title}>
                             <p>{article.Title}</p>
                             <p>{article.Source}</p>
                             <p>{article.Url}</p>
