@@ -18,7 +18,7 @@ export default async function News() {
         }
     ]
 
-    const countries = ['sg'];
+    const countries = ['sg', 'us'];
     
     // only if date not provided
     const date = new Date();
@@ -30,12 +30,23 @@ export default async function News() {
     // extract news from all countries for today
     let items = [];
     for (const country of countries) {
-        let file = await fs.readFile(process.cwd() + `/app/news/data/${country}/${formattedDate}.json`)
-        let data = JSON.parse(file);
-        items.push(...data.news)
+        const filePath = process.cwd() + `/app/news/data/${country}/${formattedDate}.json`;
+        if (await checkFileExists(filePath)) {
+            let file = await fs.readFile(filePath)
+            let data = JSON.parse(file);
+            items.push(...data.news)
+        } else {
+            console.log("File does not exist");
+        }
     }
     
     return (
         <Table columns={columns} items={items} />
     )
+}
+
+async function checkFileExists(file) {
+    return fs.access(file, fs.constants.F_OK)
+                .then(() => true)
+                .catch(() => false)
 }
