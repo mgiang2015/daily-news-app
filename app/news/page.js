@@ -18,7 +18,7 @@ export default async function News() {
         }
     ]
 
-    const countries = ['sg', 'us'];
+    const countries = ['sg', 'cn'];
     
     // only if date not provided
     const date = new Date();
@@ -36,7 +36,31 @@ export default async function News() {
             let data = JSON.parse(file);
             items.push(...data.news)
         } else {
-            console.log("File does not exist");
+            console.log("File does not exist. Fetiching data now");
+            const url = `https://news67.p.rapidapi.com/v2/country-news?fromCountry=${country}&onlyInternational=true`;
+            const options = {
+                method: 'GET',
+                headers: {
+                    'X-RapidAPI-Key': '730d41c45emsh3b19637b2f76127p17877bjsn51a75139d876',
+                    'X-RapidAPI-Host': 'news67.p.rapidapi.com'
+                }
+            };
+
+            try {
+                const response = await fetch(url, options);
+                const result = await response.text();
+                console.log(result);
+
+                // process response data
+                const data = JSON.parse(result);
+                items.push(...data.news)
+
+                // write to "database"
+                const parentDir = process.cwd() + `/app/news/data/${country}`;
+                await writeToFile(parentDir, filePath, result);
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
     
@@ -49,4 +73,20 @@ async function checkFileExists(file) {
     return fs.access(file, fs.constants.F_OK)
                 .then(() => true)
                 .catch(() => false)
+}
+
+async function writeToFile(parentDir, filepath, content) {
+    if (!(await checkFileExists(filepath))) {
+        await fs.mkdir(parentDir, { recursive: true }, (err) => {
+            if (err) throw err;
+        })
+    }
+
+    await fs.writeFile(filepath, content, (err) => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(`Wrote to ${filepath} successfully`);
+        }
+    })
 }
