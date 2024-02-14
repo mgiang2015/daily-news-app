@@ -4,6 +4,30 @@ export default async function News() {
     const file = await fs.readFile(process.cwd() + '/app/api/news/data/test.json', 'utf8');
     const data = JSON.parse(file);
 
+    const columns = [
+        {
+            key: "Title",
+            label: "Title",
+        },{
+            key: "Source",
+            label: "Source",
+        },{
+            key: "Url",
+            label: "Link",
+        },{
+            key: "PublishedOn",
+            label: "Published On",
+        },{
+            key: "Description",
+            label: "Description",
+        },{
+            key: "Summary",
+            label: "Summary",
+        },
+    ]
+
+    const items = data.news;
+
     return (
         <div>
             {
