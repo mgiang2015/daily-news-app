@@ -2,9 +2,6 @@ import { promises as fs } from 'fs';
 import Table from '../ui/table';
 
 export default async function News() {
-    const file = await fs.readFile(process.cwd() + '/app/news/data/test.json', 'utf8');
-    const data = JSON.parse(file);
-
     const columns = [
         {
             key: "Title",
@@ -21,7 +18,22 @@ export default async function News() {
         }
     ]
 
-    const items = data.news;
+    const countries = ['sg'];
+    
+    // only if date not provided
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = `0${date.getMonth() + 1}`.slice(-2);
+    const day = `0${date.getDate()}`.slice(-2);
+    const formattedDate = `${year}-${month}-${day}`;
+
+    // extract news from all countries for today
+    let items = [];
+    for (const country of countries) {
+        let file = await fs.readFile(process.cwd() + `/app/news/data/${country}/${formattedDate}.json`)
+        let data = JSON.parse(file);
+        items.push(...data.news)
+    }
     
     return (
         <Table columns={columns} items={items} />
