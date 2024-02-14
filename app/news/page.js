@@ -1,7 +1,13 @@
 import { promises as fs } from 'fs';
 import Table from '../ui/table';
 
-export default async function News() {
+// searchParams: { [key: string]: string | string[] | undefined }
+// params: { slug: string } -> Useful for dynamic routing, for example localhost:3000/news/[date]
+export default async function Page({ 
+    searchParams
+ }) {
+    console.log(searchParams);
+
     const columns = [
         {
             key: "Title",
@@ -13,28 +19,35 @@ export default async function News() {
             key: "PublishedOn",
             label: "Published On",
         },{
+            key: "Country",
+            label: "Country",
+        },{
             key: "Description",
             label: "Description",
         }
     ]
 
-    const countries = ['sg', 'cn'];
-    
+    // Required from params: countries, sortBy. Each header link to sortBy=...
+    let countries = [];
+    if (typeof(searchParams.country) === "string") {
+        countries.push(searchParams.country);
+    } else {
+        countries = searchParams.country || ['sg', 'cn'];
+    }
+
     // only if date not provided
     const date = new Date();
-    const year = date.getFullYear();
-    const month = `0${date.getMonth() + 1}`.slice(-2);
-    const day = `0${date.getDate()}`.slice(-2);
-    const formattedDate = `${year}-${month}-${day}`;
+    const formattedDate = formatDate(date);
 
     // extract news from all countries for today
     let items = [];
     for (const country of countries) {
         const filePath = process.cwd() + `/app/news/data/${country}/${formattedDate}.json`;
         if (await checkFileExists(filePath)) {
-            let file = await fs.readFile(filePath)
-            let data = JSON.parse(file);
-            items.push(...data.news)
+            const file = await fs.readFile(filePath)
+            const data = JSON.parse(file);
+            const newsWithCountry = data.news.map((item) => ({ ...item, Country: country, PublishedOn: formatDate(new Date(item.PublishedOn))}))
+            items.push(...newsWithCountry)
         } else {
             console.log("File does not exist. Fetiching data now");
             const url = `https://news67.p.rapidapi.com/v2/country-news?batchSize=30&fromCountry=${country}&onlyInternational=true`;
@@ -63,6 +76,14 @@ export default async function News() {
             }
         }
     }
+
+    // sort items using column key
+    const sortBy = searchParams.sortBy;
+    if (sortBy && ["Title", "Source", "Country", "Description"].includes(sortBy)) {
+        items.sort((a,b) => a[sortBy].localeCompare(b[sortBy]));
+    } else {
+        console.log("Invalid sort");
+    }
     
     return (
         <Table columns={columns} items={items} />
@@ -89,4 +110,14 @@ async function writeToFile(parentDir, filepath, content) {
             console.log(`Wrote to ${filepath} successfully`);
         }
     })
+}
+
+// Returns YYYY-MM-DD
+function formatDate(dateObject) {
+    const year = dateObject.getFullYear();
+    const month = `0${dateObject.getMonth() + 1}`.slice(-2);
+    const day = `0${dateObject.getDate()}`.slice(-2);
+    const formattedDate = `${year}-${month}-${day}`;
+
+    return formattedDate;
 }

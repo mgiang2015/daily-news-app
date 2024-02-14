@@ -16,6 +16,7 @@ export default function Table({ columns, items }) {
                         </td>
                         <td style={{ border: '1px solid' }}>{item.Source}</td>
                         <td style={{ border: '1px solid' }}>{item.PublishedOn}</td>
+                        <td style={{ border: '1px solid' }}>{item.Country}</td>
                         <td style={{ border: '1px solid' }}>{item.Description}</td>
                     </tr>
                 ))}
