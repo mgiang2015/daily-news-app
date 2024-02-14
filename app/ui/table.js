@@ -1,27 +1,4 @@
-import { promises as fs } from 'fs';
-
-export default async function News() {
-    const file = await fs.readFile(process.cwd() + '/app/api/news/data/test.json', 'utf8');
-    const data = JSON.parse(file);
-
-    const columns = [
-        {
-            key: "Title",
-            label: "Title",
-        },{
-            key: "Source",
-            label: "Source",
-        },{
-            key: "PublishedOn",
-            label: "Published On",
-        },{
-            key: "Description",
-            label: "Description",
-        }
-    ]
-
-    const items = data.news;
-    
+export default function Table({ columns, items }) {
     return (
         <table style={{ border: "2px solid" }}>
             <thead>
