@@ -35,5 +35,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# keys
-/app/api/news/keys.json
+# Cache data
+/app/news/data

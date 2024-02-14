@@ -37,7 +37,7 @@ export default async function News() {
             items.push(...data.news)
         } else {
             console.log("File does not exist. Fetiching data now");
-            const url = `https://news67.p.rapidapi.com/v2/country-news?fromCountry=${country}&onlyInternational=true`;
+            const url = `https://news67.p.rapidapi.com/v2/country-news?batchSize=30&fromCountry=${country}&onlyInternational=true`;
             const options = {
                 method: 'GET',
                 headers: {
