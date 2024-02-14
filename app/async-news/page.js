@@ -12,39 +12,37 @@ export default async function News() {
             key: "Source",
             label: "Source",
         },{
-            key: "Url",
-            label: "Link",
-        },{
             key: "PublishedOn",
             label: "Published On",
         },{
             key: "Description",
             label: "Description",
-        },{
-            key: "Summary",
-            label: "Summary",
-        },
+        }
     ]
 
     const items = data.news;
-
+    
     return (
-        <div>
-            {
-                data.news.map(article => {
-                    return (
-                        <div key={article.Title}>
-                            <p>{article.Title}</p>
-                            <p>{article.Source}</p>
-                            <p>{article.Url}</p>
-                            <p>{article.PublishedOn}</p>
-                            <p>{article.Description}</p>
-                            <p>{article.Summary}</p>
-                            <p>{article.Categories.label}</p>
-                        </div>
-                    )
-                })
-            }
-        </div>
+        <table style={{ border: "2px solid" }}>
+            <thead>
+                <tr>
+                    {columns.map(column => <th style={{ border: '1px solid' }} key={column.key} scope='col'>{column.label}</th>)}
+                </tr>
+            </thead>
+            <tbody>
+                {items.map((item) => (
+                    <tr key={item.Title}>
+                        <td style={{ border: '1px solid' }}>
+                            <a href={item.Url} target='_blank'>
+                                {item.Title}
+                            </a>
+                        </td>
+                        <td style={{ border: '1px solid' }}>{item.Source}</td>
+                        <td style={{ border: '1px solid' }}>{item.PublishedOn}</td>
+                        <td style={{ border: '1px solid' }}>{item.Description}</td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
     )
 }
