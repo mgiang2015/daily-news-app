@@ -56,7 +56,8 @@ export default async function Page({
                 headers: {
                     'X-RapidAPI-Key': '730d41c45emsh3b19637b2f76127p17877bjsn51a75139d876',
                     'X-RapidAPI-Host': 'news67.p.rapidapi.com'
-                }
+                },
+                cache: 'no-store'
             };
 
             try {
@@ -66,7 +67,8 @@ export default async function Page({
 
                 // process response data
                 const data = JSON.parse(result);
-                items.push(...data.news)
+                const newsWithCountry = data.news.map((item) => ({ ...item, Country: country, PublishedOn: formatDate(new Date(item.PublishedOn))}))
+                items.push(...newsWithCountry)
 
                 // write to "database"
                 const parentDir = process.cwd() + `/app/news/data/${country}`;
@@ -117,7 +119,7 @@ function formatDate(dateObject) {
     const year = dateObject.getFullYear();
     const month = `0${dateObject.getMonth() + 1}`.slice(-2);
     const day = `0${dateObject.getDate()}`.slice(-2);
-    const formattedDate = `${year}-${month}-${day}`;
+    const formattedDate = `${day}-${month}-${year}`;
 
     return formattedDate;
 }
