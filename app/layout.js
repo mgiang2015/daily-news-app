@@ -18,10 +18,10 @@ export default function RootLayout({ children }) {
   
   return (
     <html lang="en">
-      <header style={{ minHeight: "3em", padding: "0.5em"  }}>
-        <h1 style={{ fontSize: "2em", fontWeight: "bold" }}>Daily News App</h1>
-      </header>
-      <main className={inter.className}>
+      <body className={inter.className}>
+        <div style={{ minHeight: "3em", padding: "0.5em"  }}>
+          <h1 style={{ fontSize: "2em", fontWeight: "bold" }}>Daily News App</h1>
+        </div>
         {/* Container for sidebar and children. Flex */}
         <div style={{ display: "flex" }}>
           <div style={{ height: "100%", minWidth: "10em", padding: "0.5em", backgroundImage: "linear-gradient(to right,  #90EE90, white)" }}>
@@ -29,8 +29,8 @@ export default function RootLayout({ children }) {
             { 
               links.map(link => {
                   return (
-                    <a href={link.url}>
-                      <p style={{ marginBottom: "0.5em" }}>{link.title}</p>
+                    <a href={link.url} key={link.url}>
+                      <div style={{ marginBottom: "0.5em" }}>{link.title}</div>
                     </a>
                   )
               })
@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
             {children}
           </div>
         </div>
-      </main>
+      </body>
     </html>
   );
 }
