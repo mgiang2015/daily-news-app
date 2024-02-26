@@ -1,7 +1,5 @@
 import { promises as fs } from 'fs';
 import Table from '../ui/table';
-import * as XLSX from "xlsx";
-import { saveAs } from 'file-saver';
 import DownloadButton from '../ui/downloadButton';
 
 // searchParams: { [key: string]: string | string[] | undefined }
