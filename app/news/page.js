@@ -25,33 +25,38 @@ export default async function Page({
         },{
             key: "Description",
             label: "Description",
+        },{
+            key: "Category",
+            label: "Categories",
         }
     ]
 
-    // Required from params: countries, sortBy. Each header link to sortBy=...
-    let countries = [];
-    if (typeof(searchParams.country) === "string") {
-        countries.push(searchParams.country);
-    } else {
-        countries = searchParams.country || ['sg', 'cn'];
-    }
+    // These are hardcoded right now. Change to search params soon
+    let categories = ["04000000", "05000000"]
+    let sources = ["straitstimes.com", "channelnewsasia.com"]
 
     // only if date not provided
     const date = new Date();
     const formattedDate = formatDate(date);
 
-    // extract news from all countries for today
+    // extract news from all categories for today.
     let items = [];
-    for (const country of countries) {
-        const filePath = process.cwd() + `/app/news/data/${country}/${formattedDate}.json`;
+    for (const category of categories) {
+        const filePath = process.cwd() + `/app/news/data/${category}/${formattedDate}.json`;
         if (await checkFileExists(filePath)) {
             const file = await fs.readFile(filePath)
             const data = JSON.parse(file);
-            const newsWithCountry = data.news.map((item) => ({ ...item, Country: country, PublishedOn: formatDate(new Date(item.PublishedOn))}))
-            items.push(...newsWithCountry)
+            const formattedData = data.news.map(item => ({...item, Categories: item.Categories.label, PublishedOn: formatDate(new Date(item.PublishedOn))}));
+            items.push(...formattedData)
         } else {
             console.log("File does not exist. Fetiching data now");
-            const url = `https://news67.p.rapidapi.com/v2/country-news?batchSize=30&fromCountry=${country}&onlyInternational=true`;
+
+            // Fetch based on category code and sources
+            const url = 'https://news67.p.rapidapi.com/v2/feed?' + new URLSearchParams({
+                categoryCode: "medtop:" + category,
+                batchSize: 30,
+                sources: sources,
+            });
             const options = {
                 method: 'GET',
                 headers: {
@@ -68,11 +73,11 @@ export default async function Page({
 
                 // process response data
                 const data = JSON.parse(result);
-                const newsWithCountry = data.news.map((item) => ({ ...item, Country: country, PublishedOn: formatDate(new Date(item.PublishedOn))}))
-                items.push(...newsWithCountry)
+                const formattedData = data.news.map(item => ({...item, PublishedOn: formatDate(new Date(item.PublishedOn))}));
+                items.push(formattedData)
 
                 // write to "database"
-                const parentDir = process.cwd() + `/app/news/data/${country}`;
+                const parentDir = process.cwd() + `/app/news/data/${category}`;
                 await writeToFile(parentDir, filePath, result);
             } catch (error) {
                 console.error(error);
@@ -80,12 +85,18 @@ export default async function Page({
         }
     }
 
-    // sort items using column key
+    // sort items using column key.
+    // TODO: Add Category
     const sortBy = searchParams.sortBy;
-    if (sortBy && ["Title", "Source", "Country", "Description"].includes(sortBy)) {
+    if (sortBy && ["Title", "Source", "SourceNationality", "Description", "Categories"].includes(sortBy)) {
         items.sort((a,b) => a[sortBy].localeCompare(b[sortBy]));
     } else {
-        console.log("Invalid sort");
+        console.log("Invalid sort. Sorting by PublishedOn automatically");
+        items.sort((a,b) => {
+            const dateA = a.PublishedOn.split('-').reverse().join('');
+            const dateB = b.PublishedOn.split('-').reverse().join('');
+            return dateB.localeCompare(dateA);
+        })
     }
 
     return (

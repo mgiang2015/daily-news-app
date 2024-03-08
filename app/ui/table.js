@@ -16,8 +16,9 @@ export default function Table({ columns, items }) {
                         </td>
                         <td style={{ border: '1px solid', padding: "0.5em" }}>{item.Source}</td>
                         <td style={{ border: '1px solid', padding: "0.5em" }}>{item.PublishedOn}</td>
-                        <td style={{ border: '1px solid', padding: "0.5em" }}>{item.Country}</td>
+                        <td style={{ border: '1px solid', padding: "0.5em" }}>{item.SourceNationality}</td>
                         <td style={{ border: '1px solid', padding: "0.5em" }}>{item.Description}</td>
+                        <td style={{ border: '1px solid', padding: "0.5em" }}>{item.Categories}</td>
                     </tr>
                 ))}
             </tbody>
