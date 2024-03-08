@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs';
 import Table from '../ui/table';
 import DownloadButton from '../ui/downloadButton';
+import SearchOptions from '../ui/searchOptions';
 
 // searchParams: { [key: string]: string | string[] | undefined }
 // params: { slug: string } -> Useful for dynamic routing, for example localhost:3000/news/[date]
@@ -32,8 +33,17 @@ export default async function Page({
     ]
 
     // These are hardcoded right now. Change to search params soon
-    let categories = ["04000000", "05000000"]
-    let sources = ["straitstimes.com", "channelnewsasia.com"]
+    let categories = searchParams.categories.split(',');
+    let countries = searchParams.sources.split(',');
+    
+    // Add sources based on countries
+    let sources = [];
+    for (const country in countries) {
+        if (country === 'sg') {
+            sources.push('straitstimes.com');
+            sources.push('channelnewsasia.com');
+        }
+    }
 
     // only if date not provided
     const date = new Date();
@@ -101,6 +111,7 @@ export default async function Page({
 
     return (
         <div>
+            <SearchOptions />
             <DownloadButton data={items} />
             <Table columns={columns} items={items} />
         </div>
