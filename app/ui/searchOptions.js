@@ -35,6 +35,10 @@ export default function SearchOptions() {
                 <div>Categories</div>
                 <input type="checkbox" value="04000000" onChange={handleCategoryPick}/> Economy, Business and Finance
                 <input type="checkbox" value="05000000" onChange={handleCategoryPick}  style={{ marginLeft: "2em" }}/> Education
+                <input type="checkbox" value="09000000" onChange={handleCategoryPick}  style={{ marginLeft: "2em" }}/> Labour
+                <input type="checkbox" value="11000000" onChange={handleCategoryPick}  style={{ marginLeft: "2em" }}/> Politics
+                <input type="checkbox" value="13000000" onChange={handleCategoryPick}  style={{ marginLeft: "2em" }}/> Science and Technology
+                <input type="checkbox" value="16000000" onChange={handleCategoryPick}  style={{ marginLeft: "2em" }}/> Conflict, War and Peace
             </div>
             <div style={{ marginBottom: "0.5em" }}>
                 <div>Sources</div>
