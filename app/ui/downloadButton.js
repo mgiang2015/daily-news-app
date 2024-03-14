@@ -13,6 +13,6 @@ export default function DownloadButton({ data }) {
     };
     
     return (
-        <button onClick={() => downloadExcel(data)}>Download as Excel</button>
+        <button onClick={() => downloadExcel(data)} style={{ marginBottom: "0.5em", padding: "0.5em", backgroundColor: "#64bdac", color: "white", borderRadius: 10 }}>Download as Excel</button>
     )
 }

@@ -31,18 +31,18 @@ export default function SearchOptions() {
 
     return (
         <>
-            <div>
+            <div style={{ marginBottom: "0.5em" }}>
                 <div>Categories</div>
                 <input type="checkbox" value="04000000" onChange={handleCategoryPick}/> Economy, Business and Finance
-                <input type="checkbox" value="05000000" onChange={handleCategoryPick}/> Education
+                <input type="checkbox" value="05000000" onChange={handleCategoryPick}  style={{ marginLeft: "2em" }}/> Education
             </div>
-            <div>
+            <div style={{ marginBottom: "0.5em" }}>
                 <div>Sources</div>
                 <input type="checkbox" value="sg" onChange={handleSourcePick}/> Singapore (Straits Times, Channel News Asia)
             </div>
-            <div>
+            <div style={{ marginBottom: "0.5em" }}>
                 <div>Sort By</div>
-                <select onChange={handleSortPick}>
+                <select onChange={handleSortPick} style={{ padding: "0.5em" }}>
                     <option value="">PublishedOn</option>
                     <option value="Title">Title</option>
                     <option value="Source">Source</option>
@@ -51,7 +51,7 @@ export default function SearchOptions() {
                     <option value="Categories">Categories</option>
                 </select>
             </div>
-            <div>
+            <div style={{ marginBottom: "0.5em", width: "fit-content", padding: "0.5em", backgroundColor: "#0092fb", color: "white", borderRadius: 10 }}>
                 <a href={"/news?" + new URLSearchParams({
                     categories: categories,
                     sources: sources,
