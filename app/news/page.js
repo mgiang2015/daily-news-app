@@ -33,13 +33,23 @@ export default async function Page({
     ]
 
     // These are hardcoded right now. Change to search params soon
-    let categories = searchParams.categories.split(',');
-    let countries = searchParams.sources.split(',');
+    let categories = []
+    if (searchParams.categories && searchParams.categories.length > 0) {
+        categories = searchParams.categories.split(',');
+    }
+    
+    let countries = []
+    if (searchParams.sources && searchParams.sources.length > 0) {
+        countries = searchParams.sources.split(',');
+    }
+
+    console.log(countries)
     
     // Add sources based on countries
     let sources = [];
-    for (const country in countries) {
-        if (country === 'sg') {
+    for (let i = 0; i < countries.length; i++) {
+        console.log(countries[i])
+        if (countries[i] === 'sg') {
             sources.push('straitstimes.com');
             sources.push('channelnewsasia.com');
         }
