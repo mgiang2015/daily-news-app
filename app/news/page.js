@@ -93,8 +93,8 @@ export default async function Page({
 
                 // process response data
                 const data = JSON.parse(result);
-                const formattedData = data.news.map(item => ({...item, PublishedOn: formatDate(new Date(item.PublishedOn))}));
-                items.push(formattedData)
+                const formattedData = data.news.map(item => ({...item, Categories: item.Categories.label, PublishedOn: formatDate(new Date(item.PublishedOn))}));
+                items.push(...formattedData)
 
                 // write to "database"
                 const parentDir = process.cwd() + `/app/news/data/${category}`;
